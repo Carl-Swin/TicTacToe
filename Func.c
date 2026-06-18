@@ -15,7 +15,8 @@ int t_t_t(int Player) {
 
 	do {
 		system("cls");
-		std::cout << "Player #" << Player << "\'s turn\n";
+		//std::cout << "Player #" << Player << "\'s turn\n";
+		printf("Player #%d\'s turn\n", Player);
 		draw_board(XSelect, YSelect, 0);
 
 		A = getch();
@@ -47,8 +48,9 @@ int t_t_t(int Player) {
 			case 13:
 				SelectedSpace = set_mark(Player, XSelect, YSelect);
 				if (SelectedSpace) {
-					std::cout << "Player #" << SelectedSpace << " is already there\n"
-						"(press space to choose a different spot)\n";
+					//std::cout << "Player #" << SelectedSpace << " is already there\n"
+					//	"(press space to choose a different spot)\n";
+					printf("Player #%d is already there\n(press space to choose a different spot)\n", SelectedSpace);
 					do { A = getch(); } while (A != 32);
 				}
 				break;
@@ -84,13 +86,13 @@ int draw_board(unsigned short XSelect, unsigned short YSelect, int Last) {
 	int j = 0;
 
 	for (int i = 0; i < 6; ++i) {
-		spaces(Space, Select, XSelect, YSelect, i, j, Last);
+		spaces(&Space, Select, XSelect, YSelect, i, j, Last);
 		
 		printf("%c%c", Space, Walls);
 		Space = WHITESPACE;
 		
 		if (!((i + 1) % 2)) {
-			spaces(Space, Select, XSelect, YSelect, i + 1, j, Last);
+			spaces(&Space, Select, XSelect, YSelect, i + 1, j, Last);
 
 			if (i == 5) printf("%c\n", Space);
 			else printf("%c\n%c%c%c%c%c\n", 
@@ -110,17 +112,17 @@ int draw_board(unsigned short XSelect, unsigned short YSelect, int Last) {
 	return 0;
 }
 
-int spaces(unsigned char & Space, unsigned char Select, short XSelect, short YSelect, int i, int j, int Last) {
+int spaces(unsigned char * Space, unsigned char Select, short XSelect, short YSelect, int i, int j, int Last) {
 	if (Spots[i + j] == 1) {
-		Space = PLR1;
+		(*Space) = PLR1;
 	}
 	if (Spots[i + j] == 2) {
-		Space = PLR2;
+		(*Space) = PLR2;
 	}
 	
 	if (XSelect == (i - (j * 2)) && !Last) {
 		if (YSelect == j)
-			Space = Select;
+			(*Space) = Select;
 	}
 	
 	return 0;
@@ -140,33 +142,33 @@ int set_mark(int Player, unsigned short XSelect, unsigned short YSelect) {
 int check_winner() {
 	int Winner = 0;
 
-	h_check_winner(Winner, 0);
+	h_check_winner(&Winner, 0);
 	if (!Winner) {
-		v_check_winner(Winner, 0);
+		v_check_winner(&Winner, 0);
 		if (!Winner)
-			d_check_winner(Winner);
+			d_check_winner(&Winner);
 
 	}
 
 	return Winner;
 }
 
-int h_check_winner(int & Winner, int Index) {
+int h_check_winner(int * Winner, int Index) {
 	if (!(Index % 3) && Spots[Index])
 		h_check_winner(Winner, Index + 1);
 	else if (Spots[Index] && Spots[Index] == Spots[Index - 1]) {
-		if (Index % 3 == 2) return Winner = Spots[Index];
+		if (Index % 3 == 2) return (*Winner) = Spots[Index];
 		
 		h_check_winner(Winner, Index + 1);
 	}
-	if (Winner) return Winner;
+	if (*Winner) return *Winner;
 
 	if (Index < 3) h_check_winner(Winner, 3);
-	if (Winner) return Winner;
+	if (*Winner) return *Winner;
 	
 	if (Index < 6) h_check_winner(Winner, 6);
-	if (Winner) return Winner;
-	return Winner = 0;
+	if (*Winner) return *Winner;
+	return *Winner = 0;
 
 	/*
 	if ((Index + 1) % 3 == 0)
@@ -184,32 +186,32 @@ int h_check_winner(int & Winner, int Index) {
 	}
 	*/
 }
-int v_check_winner(int & Winner, int Index) {
+int v_check_winner(int * Winner, int Index) {
 	if (Index < 3 && Spots[Index])
 		v_check_winner(Winner, Index + 3);
 	else if (Spots[Index] && Spots[Index] == Spots[Index - 3]) {
-		if (Index > 5) return Winner = Spots[Index];
+		if (Index > 5) return (*Winner) = Spots[Index];
 		
 		v_check_winner(Winner, Index + 3);
 	}
-	if (Winner) return Winner;
+	if (*Winner) return *Winner;
 
 	if (!(Index % 3)) v_check_winner(Winner, 1);
-	if (Winner) return Winner;
+	if (*Winner) return *Winner;
 	
 	if (Index % 3 == 1) v_check_winner(Winner, 2);
-	if (Winner) return Winner;
-	return Winner = 0;
+	if (*Winner) return *Winner;
+	return (*Winner) = 0;
 }
-int d_check_winner(int & Winner) {
+int d_check_winner(int * Winner) {
 	int Middle = Spots[4];
 
 	if (Spots[0] == Middle && Spots[8] == Middle)
-		return Winner = Middle;
+		return (*Winner) = Middle;
 	if (Spots[2] == Middle && Spots[6] == Middle)
-		return Winner = Middle;
+		return (*Winner) = Middle;
 
-	return Winner = 0;
+	return (*Winner) = 0;
 }
 
 int check_cat(int Index) {

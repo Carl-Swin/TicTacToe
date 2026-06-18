@@ -1,5 +1,4 @@
 #include "Header.h"
-using namespace std;
 
 //NOT ENOUGH DATA FOR ALL SPACES -- FIX
 //unsigned short XSpots[3] = {0};
@@ -20,12 +19,12 @@ int main() {
 	}
 
 	system("cls");
-	cout << "\n";
+	printf("\n");
 	draw_board(0, 0, 1);
 
-	if (Winner == 9) cout << "Cat won the game!\n";
-	else cout << "Player #" << Winner << " Wins!\n";
-	cout << "(press space to exit)\n";
+	if (Winner == 9) printf("Cat won the game!\n");
+	else printf("Player #%d Wins!\n", Winner);
+	printf("(press space to exit)\n");
 
 	do { Player = getch(); } while (Player != 32);
 
