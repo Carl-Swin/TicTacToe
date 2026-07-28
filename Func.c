@@ -14,8 +14,12 @@ int t_t_t(int Player) {
 	int SelectedSpace = 0;
 
 	do {
+#ifdef WIN_SYS
 		system("cls");
-		//std::cout << "Player #" << Player << "\'s turn\n";
+#else
+		system("clear");
+#endif
+
 		printf("Player #%d\'s turn\n", Player);
 		draw_board(XSelect, YSelect, 0);
 
@@ -48,8 +52,6 @@ int t_t_t(int Player) {
 			case 13:
 				SelectedSpace = set_mark(Player, XSelect, YSelect);
 				if (SelectedSpace) {
-					//std::cout << "Player #" << SelectedSpace << " is already there\n"
-					//	"(press space to choose a different spot)\n";
 					printf("Player #%d is already there\n(press space to choose a different spot)\n", SelectedSpace);
 					do { A = getch(); } while (A != 32);
 				}
@@ -71,16 +73,10 @@ int t_t_t(int Player) {
 }
 
 int draw_board(unsigned short XSelect, unsigned short YSelect, int Last) {
-/*
-	unsigned char Walls = '³';
-	unsigned char Middle[] = "Ä´ÃÄ´ÃÄ";
-	unsigned char Select = '±';
-	unsigned char Space = ' ';
-*/
-
-	unsigned char Walls = 186;
-	unsigned char Middle[] = {205, 206, 205, 206, 205};
-	unsigned char Select = 178;
+	/*
+	unsigned char Walls = VERT;
+	unsigned char Middle[] = {HORI, CROS, HORI, CROS, HORI};
+	unsigned char Select = CURS;
 	unsigned char Space = WHITESPACE;
 
 	int j = 0;
@@ -108,21 +104,42 @@ int draw_board(unsigned short XSelect, unsigned short YSelect, int Last) {
 			++j;
 		}
 	}
+	*/
+	char Middle[] = HORI CROS HORI CROS HORI;
+	char Select[] = CURS;
+	char Space[] = WHITESPACE;
+
+	int j = 0;
+
+	for (int i = 0; i < 6; ++i) {
+		spaces(Space, Select, XSelect, YSelect, i, j, Last);
+		printf("%s%s", Space, VERT);
+		strcpy(Space, WHITESPACE);
+		
+		if (!((i + 1) % 2)) {
+			spaces(Space, Select, XSelect, YSelect, i + 1, j, Last);
+			if (i == 5) printf("%s\n", Space);
+			else printf("%s\n%s\n", Space, Middle);
+			strcpy(Space, WHITESPACE);
+
+			++j;
+		}
+	}
 
 	return 0;
 }
 
-int spaces(unsigned char * Space, unsigned char Select, short XSelect, short YSelect, int i, int j, int Last) {
+int spaces(char * Space, const char * Select, short XSelect, short YSelect, int i, int j, int Last) {
 	if (Spots[i + j] == 1) {
-		(*Space) = PLR1;
+		strcpy(Space, PLR1 "\0");
 	}
 	if (Spots[i + j] == 2) {
-		(*Space) = PLR2;
+		strcpy(Space, PLR2 "\0");
 	}
 	
 	if (XSelect == (i - (j * 2)) && !Last) {
 		if (YSelect == j)
-			(*Space) = Select;
+			strcpy(Space, Select);
 	}
 	
 	return 0;
@@ -147,7 +164,6 @@ int check_winner() {
 		v_check_winner(&Winner, 0);
 		if (!Winner)
 			d_check_winner(&Winner);
-
 	}
 
 	return Winner;
@@ -169,22 +185,6 @@ int h_check_winner(int * Winner, int Index) {
 	if (Index < 6) h_check_winner(Winner, 6);
 	if (*Winner) return *Winner;
 	return *Winner = 0;
-
-	/*
-	if ((Index + 1) % 3 == 0)
-		return Winner;
-	
-	if (!Index && Spots[Index]) {
-		Winner = Spots[Index];
-		h_check_winner(Winner, Index + 1);
-	}
-	else if (Winner == Spots[Index])
-		h_check_winner(Winner, Index + 1);
-	else {
-		Winner = 0;
-		return Winner;
-	}
-	*/
 }
 int v_check_winner(int * Winner, int Index) {
 	if (Index < 3 && Spots[Index])
@@ -221,31 +221,3 @@ int check_cat(int Index) {
 		return check_cat(Index + 1);
 	return 0;
 }
-
-		/* Old new line formatting
-		if (!((i + 1) % 2) && i != 5) {
-			Check_Space(Space, Select, XSelect, YSelect, i + 1, j);
-
-			printf("%c\n%s\n", Space, Middle);
-			Space = WhiteSpace;
-			++j;
-		}
-		else if (i == 5) {
-			Check_Space(Space, Select, XSelect, YSelect, i + 1, j);
-
-			printf("%c\n", Space);
-			Space = WhiteSpace;
-			++j;
-		}
-		*/
-
-	/*
-	if (XSpots[(i - (j * 2))] == 2) {
-		if (YSpots[j] == 2)
-			Space = PLR2;
-	}
-	if (XSpots[(i - (j * 2))] == 2) {
-		if (YSpots[j] == 2)
-			Space = PLR2;
-	}
-	*/
