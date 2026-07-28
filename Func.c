@@ -1,8 +1,5 @@
 #include "Header.h"
 
-//extern unsigned short XSpots[];
-//extern unsigned short YSpots[];
-
 extern unsigned short Spots[];
 
 int t_t_t(int Player) {
@@ -73,38 +70,6 @@ int t_t_t(int Player) {
 }
 
 int draw_board(unsigned short XSelect, unsigned short YSelect, int Last) {
-	/*
-	unsigned char Walls = VERT;
-	unsigned char Middle[] = {HORI, CROS, HORI, CROS, HORI};
-	unsigned char Select = CURS;
-	unsigned char Space = WHITESPACE;
-
-	int j = 0;
-
-	for (int i = 0; i < 6; ++i) {
-		spaces(&Space, Select, XSelect, YSelect, i, j, Last);
-		
-		printf("%c%c", Space, Walls);
-		Space = WHITESPACE;
-		
-		if (!((i + 1) % 2)) {
-			spaces(&Space, Select, XSelect, YSelect, i + 1, j, Last);
-
-			if (i == 5) printf("%c\n", Space);
-			else printf("%c\n%c%c%c%c%c\n", 
-					Space, 
-					Middle[0],
-					Middle[1],
-					Middle[2],
-					Middle[3],
-					Middle[4]);
-
-			Space = WHITESPACE;
-
-			++j;
-		}
-	}
-	*/
 	char Middle[] = HORI CROS HORI CROS HORI;
 	char Select[] = CURS;
 	char Space[] = WHITESPACE;
